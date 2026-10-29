@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CU LaptopLoop — Campus Laptop Rental Platform | Chandigarh University</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #0f172a;
+            --primary-light: #2563eb;
+            --accent: #0284c7;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-muted: #f1f5f9;
+            --border: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.12);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; width: 100%; }
+
+        /* Site Header & Navigation */
+        .site-header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .navbar { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .brand-logo {
+            display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 800;
+            color: var(--primary-dark); text-decoration: none; cursor: pointer;
+        }
+        .brand-icon {
+            width: 38px; height: 38px; background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff;
+        }
+        .brand-badge {
+            font-size: 0.65rem; font-weight: 700; background: #e0f2fe; color: #0369a1;
+            padding: 0.2rem 0.5rem; border-radius: var(--radius-full); text-transform: uppercase;
+        }
+
+        .nav-links { display: flex; align-items: center; gap: 1.25rem; list-style: none; }
+        .nav-link {
+            font-size: 0.925rem; font-weight: 500; color: var(--text-muted); text-decoration: none;
+            padding: 0.5rem 0.25rem; border-bottom: 2px solid transparent; cursor: pointer; transition: var(--transition);
+        }
+        .nav-link:hover, .nav-link.active { color: var(--primary-light); border-bottom-color: var(--primary-light); }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 0.55rem 1.15rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.9rem;
+            cursor: pointer; border: 1px solid transparent; transition: var(--transition); text-decoration: none;
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-outline { background: transparent; border-color: var(--border); color: var(--text-main); }
+        .btn-outline:hover { background: var(--bg-muted); }
+        .btn-accent { background: linear-gradient(135deg, #2563eb, #0284c7); color: #fff; }
+        .btn-accent:hover { background: linear-gradient(135deg, #1d4ed8, #0369a1); }
+        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; border-radius: var(--radius-sm); }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-block { width: 100%; }
+
+        /* Badges */
+        .badge {
+            display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.65rem;
+            border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+        }
+        .badge-pending { background: #fef3c7; color: #b45309; }
+        .badge-approved { background: #eff6ff; color: #1d4ed8; }
+        .badge-active { background: #ecfdf5; color: #047857; }
+        .badge-returned { background: #f1f5f9; color: #475569; }
+        .badge-paid { background: #ecfdf5; color: #059669; }
+        .badge-rejected { background: #fef2f2; color: #b91c1c; }
+
+        /* Hero Section */
+        .hero {
+            background: radial-gradient(circle at 80% 20%, #1e3a8a 0%, #0b192c 100%);
+            color: #ffffff; padding: 4.5rem 0 5.5rem 0; position: relative;
+        }
+        .hero-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem; align-items: center; }
+        .hero-title { font-size: 3rem; font-weight: 800; line-height: 1.15; margin-bottom: 1rem; }
+        .hero-title span {
+            background: linear-gradient(135deg, #60a5fa, #38bdf8);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-desc { font-size: 1.1rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 2rem; max-width: 550px; }
+        .hero-stats { display: flex; gap: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.15); }
+        .stat-val { font-size: 1.75rem; font-weight: 800; color: #fff; }
+        .stat-lbl { font-size: 0.825rem; color: #94a3b8; }
+
+        /* Laptop Cards Grid */
+        .laptops-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .laptop-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+            overflow: hidden; box-shadow: var(--shadow-sm); transition: var(--transition); display: flex; flex-direction: column;
+        }
+        .laptop-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .laptop-thumb-wrapper { position: relative; height: 180px; background: #e2e8f0; }
+        .laptop-thumb { width: 100%; height: 100%; object-fit: cover; }
+        .laptop-brand {
+            position: absolute; top: 12px; left: 12px; background: rgba(15,23,42,0.85);
+            color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm);
+        }
+        .laptop-body { padding: 1.25rem; display: flex; flex-direction: column; flex: 1; }
+        .laptop-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.35rem; }
+        .laptop-loc { display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+        .laptop-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
+        .chip { background: var(--bg-muted); font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+        .laptop-footer {
+            margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .price { font-size: 1.35rem; font-weight: 800; color: var(--primary); }
+
+        /* Tables */
+        .table-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+        .custom-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .custom-table th { background: var(--bg-muted); padding: 0.85rem 1.25rem; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        .custom-table td { padding: 1rem 1.25rem; font-size: 0.9rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .custom-table tr:last-child td { border-bottom: none; }
+        .custom-table tr:hover { background: #f8fafc; }
+
+        /* Forms & Modals */
+        .form-group { margin-bottom: 1.15rem; }
+        .form-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; }
+        .form-control {
+            width: 100%; padding: 0.6rem 0.85rem; font-size: 0.925rem; font-family: inherit;
+            border: 1px solid var(--border); border-radius: var(--radius-md); background: #fff;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1.5rem;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: #fff; border-radius: var(--radius-lg); width: 100%; max-width: 540px;
+            box-shadow: var(--shadow-xl); overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;
+        }
+        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .modal-title { font-size: 1.2rem; font-weight: 700; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .modal-body { padding: 1.5rem; overflow-y: auto; }
+        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: var(--bg-muted); display: flex; justify-content: flex-end; gap: 0.75rem; }
+
+        /* Toast Container */
+        #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toast {
+            background: #fff; border-radius: var(--radius-md); padding: 0.85rem 1.15rem; box-shadow: var(--shadow-xl);
+            border-left: 4px solid var(--primary-light); font-size: 0.875rem; font-weight: 500; display: flex; align-items: center; gap: 0.6rem;
+            animation: slideIn 0.25s ease;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Section Visibility Switching */
+        .app-view { display: none; padding: 3rem 0; }
+        .app-view.active { display: block; }
+
+        /* Footer */
+        .site-footer {
+            margin-top: auto; background: #0f172a; color: #94a3b8; padding: 2.5rem 0;
+            border-top: 1px solid #1e293b; font-size: 0.85rem; text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-title { font-size: 2.2rem; }
+            .hero-stats { justify-content: center; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+        <div class="container">
+            <nav class="navbar">
+                <a class="brand-logo" onclick="switchView('landing')">
+                    <div class="brand-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    </div>
+                    <span>CU LaptopLoop</span>
+                    <span class="brand-badge">Campus</span>
+                </a>
+
+                <ul class="nav-links">
+                    <li><a class="nav-link active" onclick="switchView('landing')">Home</a></li>
+                    <li><a class="nav-link" onclick="switchView('browse')">Browse Laptops</a></li>
+                    <li><a class="nav-link" onclick="switchView('dashboard')">Dashboard</a></li>
+                    <li><a class="nav-link" onclick="switchView('rentals')">My Rentals</a></li>
+                    <li><a class="nav-link" onclick="switchView('listings')">My Listings</a></li>
+                    <li><a class="nav-link" onclick="switchView('requests')">Owner Requests <span id="nav-req-count" class="badge badge-pending" style="display:none;">0</span></a></li>
+                </ul>
+
+                <div id="auth-nav-area" style="display:flex; align-items:center; gap:0.75rem;">
+                    <!-- Dynamically populated -->
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 1: LANDING PAGE -->
+    <!-- ============================================================ -->
+    <section id="view-landing" class="app-view active" style="padding-top:0;">
+        <div class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div>
+                        <div style="display:inline-flex; align-items:center; gap:0.4rem; background:rgba(255,255,255,0.12); padding:0.25rem 0.8rem; border-radius:var(--radius-full); font-size:0.8rem; color:#93c5fd; margin-bottom:1.25rem;">
+                            Chandigarh University Student Rental Community
+                        </div>
+                        <h1 class="hero-title">Rent High-End Laptops <span>On Campus.</span></h1>
+                        <p class="hero-desc">
+                            Need a machine with 16GB/32GB RAM or an RTX GPU for hackathons, semester projects, or AI assignments? Borrow verified laptops from fellow students at student-friendly daily rates.
+                        </p>
+                        <div style="display:flex; gap:1rem; margin-bottom:2rem;">
+                            <button class="btn btn-primary" onclick="switchView('browse')" style="padding:0.75rem 1.5rem; font-size:1rem;">
+                                Browse Available Laptops
+                            </button>
+                            <button class="btn btn-outline" onclick="openAddLaptopModal()" style="color:#fff; border-color:rgba(255,255,255,0.3); padding:0.75rem 1.5rem;">
+                                List Your Laptop
+                            </button>
+                        </div>
+                        <div class="hero-stats">
+                            <div><div class="stat-val" id="stat-count-laptops">5+</div><div class="stat-lbl">Campus Laptops</div></div>
+                            <div><div class="stat-val">₹320</div><div class="stat-lbl">Starting / Day</div></div>
+                            <div><div class="stat-val">100%</div><div class="stat-lbl">CU UID Verified</div></div>
+                            <div><div class="stat-val">₹0</div><div class="stat-lbl">Security Deposit</div></div>
+                        </div>
+                    </div>
+                    <div>
+                        <!-- Hero Preview Card -->
+                        <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:var(--radius-lg); padding:1.5rem; backdrop-filter:blur(10px);">
+                            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80" style="width:100%; height:190px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:1rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div>
+                                    <h3 style="font-size:1.15rem; color:#fff;">MacBook Pro 14" (M2 Pro)</h3>
+                                    <p style="font-size:0.8rem; color:#93c5fd;">Academic Block 1 (A1) &bull; CS Dept</p>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:1.35rem; font-weight:800; color:#38bdf8;">₹650</div>
+                                    <div style="font-size:0.7rem; color:#cbd5e1;">per day</div>
+                                </div>
+                            </div>
+                            <div style="margin-top:0.75rem; display:flex; gap:0.4rem;">
+                                <span class="chip" style="background:rgba(255,255,255,0.15); color:#fff; border:none;">16GB RAM</span>
+                                <span class="chip" style="background:rgba(255,255,255,0.15); color:#fff; border:none;">512GB SSD</span>
+                                <span class="chip" style="background:rgba(255,255,255,0.15); color:#fff; border:none;">M2 Pro</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Section -->
+        <div class="container" style="padding-top:4rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+                <div>
+                    <h2 style="font-size:1.85rem; font-weight:800;">Featured Campus Laptops</h2>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Pick up directly at Chandigarh University Academic Blocks and Hostels</p>
+                </div>
+                <button class="btn btn-outline" onclick="switchView('browse')">View All &rarr;</button>
+            </div>
+            <div id="featured-grid" class="laptops-grid">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 2: BROWSE LAPTOPS -->
+    <!-- ============================================================ -->
+    <section id="view-browse" class="app-view">
+        <div class="container">
+            <div style="margin-bottom:2rem;">
+                <h1 style="font-size:2rem; font-weight:800; margin-bottom:0.25rem;">Browse Campus Laptops</h1>
+                <p style="color:var(--text-muted);">Filter by brand, processor, price limits, and campus handover points</p>
+            </div>
+
+            <!-- Toolbar -->
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.25rem; margin-bottom:2rem; box-shadow:var(--shadow-sm); display:flex; gap:1rem; flex-wrap:wrap;">
+                <input type="text" id="filter-search" class="form-control" placeholder="Search models, specs, location..." style="flex:2; min-width:220px;" oninput="applyFilters()">
+                <select id="filter-brand" class="form-control" style="flex:1; min-width:140px;" onchange="applyFilters()">
+                    <option value="all">All Brands</option>
+                    <option value="Apple">Apple</option>
+                    <option value="Dell">Dell</option>
+                    <option value="Lenovo">Lenovo</option>
+                    <option value="ASUS">ASUS</option>
+                    <option value="HP">HP</option>
+                </select>
+                <select id="filter-price" class="form-control" style="flex:1; min-width:140px;" onchange="applyFilters()">
+                    <option value="">Any Daily Price</option>
+                    <option value="400">Up to ₹400 / day</option>
+                    <option value="550">Up to ₹550 / day</option>
+                    <option value="700">Up to ₹700 / day</option>
+                </select>
+                <button class="btn btn-outline" onclick="resetFilters()">Reset</button>
+            </div>
+
+            <div id="browse-grid" class="laptops-grid">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 3: LAPTOP DETAILS & BOOKING -->
+    <!-- ============================================================ -->
+    <section id="view-detail" class="app-view">
+        <div class="container" style="max-width:960px;">
+            <button class="btn btn-outline btn-sm" onclick="switchView('browse')" style="margin-bottom:1.5rem;">
+                &larr; Back to Browse
+            </button>
+            <div id="detail-card-content">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 4: STUDENT DASHBOARD -->
+    <!-- ============================================================ -->
+    <section id="view-dashboard" class="app-view">
+        <div class="container">
+            <div style="margin-bottom:2rem;">
+                <h1 style="font-size:2rem; font-weight:800;">Student Dashboard</h1>
+                <p style="color:var(--text-muted);">Overview of your campus rentals, listings, and pending owner approvals</p>
+            </div>
+
+            <!-- Metric Cards -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.5rem; margin-bottom:2.5rem;">
+                <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; box-shadow:var(--shadow-sm);">
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Active Rentals</div>
+                    <div id="dash-active-count" style="font-size:2rem; font-weight:800; color:var(--primary); margin:0.25rem 0;">0</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">In your possession</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; box-shadow:var(--shadow-sm);">
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Pending Requests</div>
+                    <div id="dash-pending-count" style="font-size:2rem; font-weight:800; color:var(--warning); margin:0.25rem 0;">0</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">Awaiting owner review</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; box-shadow:var(--shadow-sm);">
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Total Earned</div>
+                    <div id="dash-earned-amount" style="font-size:2rem; font-weight:800; color:var(--success); margin:0.25rem 0;">₹0</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">From your listings</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; box-shadow:var(--shadow-sm);">
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">My Listings</div>
+                    <div id="dash-listings-count" style="font-size:2rem; font-weight:800; color:var(--primary-dark); margin:0.25rem 0;">0</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">Laptops published</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Tables -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                <div>
+                    <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:1rem;">Recent Rentals (As Renter)</h3>
+                    <div id="dash-rentals-table" class="table-card"><p style="padding:2rem; text-align:center; color:var(--text-muted);">No rentals yet.</p></div>
+                </div>
+                <div>
+                    <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:1rem;">Incoming Requests (For My Laptops)</h3>
+                    <div id="dash-requests-table" class="table-card"><p style="padding:2rem; text-align:center; color:var(--text-muted);">No incoming requests.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 5: MY RENTALS (BOOKING HISTORY) -->
+    <!-- ============================================================ -->
+    <section id="view-rentals" class="app-view">
+        <div class="container">
+            <div style="margin-bottom:2rem; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h1 style="font-size:2rem; font-weight:800;">My Rental Bookings</h1>
+                    <p style="color:var(--text-muted);">Track current and previous laptop rentals, payments, and handovers</p>
+                </div>
+                <button class="btn btn-primary" onclick="switchView('browse')">Rent Another Laptop</button>
+            </div>
+            <div id="rentals-table-container" class="table-card">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 6: MY LISTINGS (OWNER) -->
+    <!-- ============================================================ -->
+    <section id="view-listings" class="app-view">
+        <div class="container">
+            <div style="margin-bottom:2rem; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h1 style="font-size:2rem; font-weight:800;">My Laptop Listings</h1>
+                    <p style="color:var(--text-muted);">Manage the devices you are renting out to Chandigarh University students</p>
+                </div>
+                <button class="btn btn-primary" onclick="openAddLaptopModal()">+ Add New Laptop</button>
+            </div>
+            <div id="my-listings-table" class="table-card">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 7: OWNER REQUESTS -->
+    <!-- ============================================================ -->
+    <section id="view-requests" class="app-view">
+        <div class="container">
+            <div style="margin-bottom:2rem;">
+                <h1 style="font-size:2rem; font-weight:800;">Incoming Rental Requests</h1>
+                <p style="color:var(--text-muted);">Review and approve booking requests on your listed laptops</p>
+            </div>
+            <div id="owner-requests-table" class="table-card">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 8: DEMO PAYMENT SIMULATOR -->
+    <!-- ============================================================ -->
+    <section id="view-payment" class="app-view">
+        <div class="container" style="max-width:580px;">
+            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--radius-md); padding:1rem; margin-bottom:1.5rem; font-size:0.875rem; color:#1e40af;">
+                <strong>Demonstration Payment System:</strong> No real money or bank accounts are debited. This simulates a student payment confirmation.
+            </div>
+            <div id="payment-box" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem; box-shadow:var(--shadow-lg);">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VIEW 9: STUDENT PROFILE -->
+    <!-- ============================================================ -->
+    <section id="view-profile" class="app-view">
+        <div class="container" style="max-width:600px;">
+            <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:2.5rem; box-shadow:var(--shadow-sm);">
+                <div style="text-align:center; margin-bottom:1.5rem;">
+                    <div id="prof-avatar" style="width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--accent)); color:#fff; font-size:1.75rem; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem auto;">
+                        CU
+                    </div>
+                    <h2 id="prof-name" style="font-size:1.4rem; font-weight:800;">Student Name</h2>
+                    <span id="prof-uid" class="badge badge-approved" style="margin-top:0.3rem;">21BCS1014</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:0.75rem; font-size:0.9rem; border-top:1px solid var(--border); padding-top:1.5rem;">
+                    <div><span style="color:var(--text-muted);">University Email:</span> <strong id="prof-email">student@cuchd.in</strong></div>
+                    <div><span style="color:var(--text-muted);">Department:</span> <strong id="prof-dept">Computer Science & Engineering</strong></div>
+                    <div><span style="color:var(--text-muted);">Contact Phone:</span> <strong id="prof-phone">+91 98765 43210</strong></div>
+                    <div><span style="color:var(--text-muted);">Verification:</span> <span class="badge badge-active">CU Verified Student</span></div>
+                </div>
+                <div style="margin-top:2rem;">
+                    <button class="btn btn-outline btn-block" onclick="logoutUser()" style="color:var(--danger); border-color:#fecaca;">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal: Add / Edit Laptop -->
+    <div id="modal-laptop" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-laptop-title" class="modal-title">List a Laptop for Campus Rent</h3>
+                <button class="modal-close" onclick="closeModal('modal-laptop')">&times;</button>
+            </div>
+            <form id="form-laptop" onsubmit="handleSaveLaptop(event)">
+                <input type="hidden" id="edit-laptop-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Brand</label>
+                        <select id="lap-brand" class="form-control" required>
+                            <option value="Apple">Apple</option>
+                            <option value="Dell">Dell</option>
+                            <option value="Lenovo">Lenovo</option>
+                            <option value="ASUS">ASUS</option>
+                            <option value="HP">HP</option>
+                            <option value="Acer">Acer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Model Name</label>
+                        <input type="text" id="lap-model" class="form-control" placeholder="e.g. MacBook Pro M2 or Legion 5 Pro" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Key Specifications</label>
+                        <input type="text" id="lap-specs" class="form-control" placeholder="e.g. 16GB RAM, 512GB SSD, i7 Processor" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Daily Rental Price (₹)</label>
+                        <input type="number" id="lap-price" class="form-control" placeholder="e.g. 450" min="50" max="4000" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Campus Pickup Location</label>
+                        <input type="text" id="lap-location" class="form-control" placeholder="e.g. Academic Block 1 (A1) or Central Library" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Image URL (Optional)</label>
+                        <input type="url" id="lap-image" class="form-control" placeholder="https://images.unsplash.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description / Notes for Renter</label>
+                        <textarea id="lap-desc" class="form-control" rows="2" placeholder="Charger included, battery condition, software installed..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-laptop')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Listing</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Auth (Sign In / Register) -->
+    <div id="modal-auth" class="modal-overlay">
+        <div class="modal-box" style="max-width:440px;">
+            <div class="modal-header">
+                <h3 id="auth-title" class="modal-title">Student Sign In</h3>
+                <button class="modal-close" onclick="closeModal('modal-auth')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-auth" onsubmit="handleAuthSubmit(event)">
+                    <div id="reg-fields" style="display:none;">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" id="auth-name" class="form-control" placeholder="e.g. Ishaan Verma">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">University UID</label>
+                            <input type="text" id="auth-uid" class="form-control" placeholder="e.g. 21BCS1014">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email or UID</label>
+                        <input type="text" id="auth-id" class="form-control" placeholder="e.g. 21BCS1014 or aarav@cuchd.in" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="auth-pass" class="form-control" placeholder="Password@123" required>
+                    </div>
+                    <button type="submit" id="auth-btn" class="btn btn-primary btn-block btn-lg" style="margin-top:1rem;">
+                        Sign In
+                    </button>
+                </form>
+
+                <!-- Demo Quick Fill Buttons -->
+                <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px dashed var(--border);">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem; text-align:center;">
+                        Demo Student One-Click Fill
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="fillDemo('21BCS1014')" style="justify-content:space-between;">
+                            <span><strong>Aarav Sharma</strong> (21BCS1014)</span>
+                            <span style="color:var(--primary-light);">MacBook Owner &rarr;</span>
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="fillDemo('22BCS2048')" style="justify-content:space-between;">
+                            <span><strong>Riya Patel</strong> (22BCS2048)</span>
+                            <span style="color:var(--primary-light);">Legion Owner &rarr;</span>
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="fillDemo('21BIT3092')" style="justify-content:space-between;">
+                            <span><strong>Kabir Singh</strong> (21BIT3092)</span>
+                            <span style="color:var(--primary-light);">Student Renter &rarr;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:1.25rem; font-size:0.875rem;">
+                    <a id="toggle-auth-link" href="javascript:void(0)" onclick="toggleAuthMode()" style="color:var(--primary-light); font-weight:600;">
+                        Need an account? Register here
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Area -->
+    <div id="toast-container"></div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 CU LaptopLoop &bull; Campus Laptop Rental Platform for Chandigarh University Students</p>
+            <p style="margin-top:0.25rem; color:#64748b; font-size:0.775rem;">Powered by Java Logic Engine &bull; Node Backend &bull; MySQL &bull; Responsive UI</p>
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT CONTROLLER (SELF-CONTAINED & HYBRID) -->
+    <!-- ============================================================ -->
+    <script>
+        // ------------------------------------------------------------
+        // Initial Sample Data (Always works out-of-the-box!)
+        // ------------------------------------------------------------
+        const DEFAULT_USERS = [
+            { user_id: 1, name: 'Aarav Sharma', uid: '21BCS1014', email: 'aarav@cuchd.in', phone: '+91 98765 43210', department: 'Computer Science & Engineering' },
+            { user_id: 2, name: 'Riya Patel', uid: '22BCS2048', email: 'riya@cuchd.in', phone: '+91 98123 45678', department: 'Information Technology' },
+            { user_id: 3, name: 'Kabir Singh', uid: '21BIT3092', email: 'kabir@cuchd.in', phone: '+91 97234 56789', department: 'AI & Data Science' }
+        ];
+
+        const DEFAULT_LAPTOPS = [
+            {
+                laptop_id: 1, owner_id: 1, owner_name: 'Aarav Sharma', owner_uid: '21BCS1014', brand: 'Apple',
+                model: 'MacBook Pro 14" (M2 Pro)', specs: '16GB RAM, 512GB SSD, M2 Pro 16-Core',
+                description: 'Flawless machine ideal for iOS development, Flutter, and 4K video rendering.',
+                price_per_day: 650, pickup_location: 'Academic Block 1 (A1) - Room 302',
+                image_url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80', is_active: true
+            },
+            {
+                laptop_id: 2, owner_id: 1, owner_name: 'Aarav Sharma', owner_uid: '21BCS1014', brand: 'Dell',
+                model: 'Dell XPS 15 OLED', specs: '32GB DDR5, 1TB SSD, RTX 3050 Ti',
+                description: 'Top-tier workstation with gorgeous 3.5K OLED touchscreen display for deep learning.',
+                price_per_day: 550, pickup_location: 'Central Library - Ground Floor',
+                image_url: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=800&q=80', is_active: true
+            },
+            {
+                laptop_id: 3, owner_id: 2, owner_name: 'Riya Patel', owner_uid: '22BCS2048', brand: 'Lenovo',
+                model: 'Lenovo Legion 5 Pro', specs: '16GB RAM, 1TB SSD, RTX 3060 6GB (130W)',
+                description: 'Powerful gaming and CAD/3D modeling laptop. Perfect for game jams and Blender.',
+                price_per_day: 500, pickup_location: 'Hostel Block NC-3 Reception',
+                image_url: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=800&q=80', is_active: true
+            },
+            {
+                laptop_id: 4, owner_id: 2, owner_name: 'Riya Patel', owner_uid: '22BCS2048', brand: 'ASUS',
+                model: 'ROG Zephyrus G14', specs: '16GB DDR5, 1TB SSD, Radeon RX 6700S',
+                description: 'Ultrabook form factor with desktop power. Portable for hackathons and library sessions.',
+                price_per_day: 600, pickup_location: 'Student Center / Food Street',
+                image_url: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80', is_active: true
+            },
+            {
+                laptop_id: 5, owner_id: 3, owner_name: 'Kabir Singh', owner_uid: '21BIT3092', brand: 'HP',
+                model: 'HP Pavilion Aero 13', specs: '16GB RAM, 512GB SSD, Ryzen 5 5600U',
+                description: 'Featherweight laptop under 1kg. Incredible 10-hour battery backup for lectures.',
+                price_per_day: 320, pickup_location: 'Academic Block 3 (BioTech Gate)',
+                image_url: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=800&q=80', is_active: true
+            }
+        ];
+
+        const DEFAULT_BOOKINGS = [
+            {
+                booking_id: 1, laptop_id: 1, laptop_model: 'MacBook Pro 14" (M2 Pro)', brand: 'Apple',
+                renter_id: 2, renter_name: 'Riya Patel', renter_uid: '22BCS2048',
+                owner_id: 1, owner_name: 'Aarav Sharma', owner_uid: '21BCS1014', pickup_location: 'Academic Block 1 (A1)',
+                start_date: '2026-11-01', end_date: '2026-11-04', total_days: 4, total_price: 2600,
+                status: 'APPROVED', payment_status: 'PAID', transaction_id: 'TXN_CU_98234871'
+            },
+            {
+                booking_id: 2, laptop_id: 2, laptop_model: 'Dell XPS 15 OLED', brand: 'Dell',
+                renter_id: 3, renter_name: 'Kabir Singh', renter_uid: '21BIT3092',
+                owner_id: 1, owner_name: 'Aarav Sharma', owner_uid: '21BCS1014', pickup_location: 'Central Library',
+                start_date: '2026-11-05', end_date: '2026-11-08', total_days: 4, total_price: 2200,
+                status: 'PENDING', payment_status: 'PENDING', transaction_id: null
+            }
+        ];
+
+        // Storage initialization
+        function getStorage(key, fallback) {
+            const data = localStorage.getItem('cu_' + key);
+            return data ? JSON.parse(data) : fallback;
+        }
+        function setStorage(key, value) {
+            localStorage.setItem('cu_' + key, JSON.stringify(value));
+        }
+
+        let laptops = getStorage('laptops', DEFAULT_LAPTOPS);
+        let bookings = getStorage('bookings', DEFAULT_BOOKINGS);
+        let currentUser = getStorage('currentUser', DEFAULT_USERS[0]); // Defaults to logged in as Aarav
+
+        // ------------------------------------------------------------
+        // Navigation & View Switching
+        // ------------------------------------------------------------
+        function switchView(viewName) {
+            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
+            const target = document.getElementById('view-' + viewName);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick')?.includes(viewName)) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Refresh view data
+            if (viewName === 'browse') renderBrowseGrid();
+            if (viewName === 'dashboard') renderDashboard();
+            if (viewName === 'rentals') renderRentals();
+            if (viewName === 'listings') renderListings();
+            if (viewName === 'requests') renderRequests();
+            if (viewName === 'profile') renderProfile();
+        }
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            if (type === 'success') toast.style.borderLeftColor = 'var(--success)';
+            if (type === 'error') toast.style.borderLeftColor = 'var(--danger)';
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3500);
+        }
+
+        function formatCurrency(amount) {
+            return '₹' + Number(amount).toLocaleString('en-IN');
+        }
+
+        function getStatusBadge(status) {
+            switch(status) {
+                case 'PENDING': return '<span class="badge badge-pending">Pending</span>';
+                case 'APPROVED': return '<span class="badge badge-approved">Approved</span>';
+                case 'ACTIVE': return '<span class="badge badge-active">Active</span>';
+                case 'RETURNED': return '<span class="badge badge-returned">Returned</span>';
+                case 'REJECTED': return '<span class="badge badge-rejected">Rejected</span>';
+                default: return `<span class="badge">${status}</span>`;
+            }
+        }
+
+        // ------------------------------------------------------------
+        // UI Renderers
+        // ------------------------------------------------------------
+        function renderNavbarAuth() {
+            const area = document.getElementById('auth-nav-area');
+            if (currentUser) {
+                const initials = currentUser.name.split(' ').map(n=>n[0]).join('').substring(0,2);
+                area.innerHTML = `
+                    <button class="btn btn-primary btn-sm" onclick="openAddLaptopModal()">+ List Laptop</button>
+                    <div onclick="switchView('profile')" style="width:36px; height:36px; border-radius:50%; background:#e2e8f0; color:var(--primary); font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="${currentUser.name} (${currentUser.uid})">
+                        ${initials}
+                    </div>
+                `;
+            } else {
+                area.innerHTML = `
+                    <button class="btn btn-outline btn-sm" onclick="openAuthModal('login')">Log In</button>
+                    <button class="btn btn-primary btn-sm" onclick="openAuthModal('register')">Sign Up</button>
+                `;
+            }
+
+            // Update badge for pending owner requests
+            const reqCount = document.getElementById('nav-req-count');
+            if (currentUser && reqCount) {
+                const pending = bookings.filter(b => b.owner_id === currentUser.user_id && b.status === 'PENDING').length;
+                if (pending > 0) {
+                    reqCount.textContent = pending;
+                    reqCount.style.display = 'inline-flex';
+                } else {
+                    reqCount.style.display = 'none';
+                }
+            }
+        }
+
+        function renderFeatured() {
+            const grid = document.getElementById('featured-grid');
+            if (!grid) return;
+            const items = laptops.slice(0, 4);
+            grid.innerHTML = items.map(l => createLaptopCardHtml(l)).join('');
+            document.getElementById('stat-count-laptops').textContent = laptops.length + '+';
+        }
+
+        function renderBrowseGrid(filteredList = null) {
+            const grid = document.getElementById('browse-grid');
+            const items = filteredList || laptops;
+            if (items.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--text-muted);">No laptops found matching filters.</div>`;
+                return;
+            }
+            grid.innerHTML = items.map(l => createLaptopCardHtml(l)).join('');
+        }
+
+        function createLaptopCardHtml(l) {
+            return `
+                <div class="laptop-card">
+                    <div class="laptop-thumb-wrapper">
+                        <img src="${l.image_url}" class="laptop-thumb">
+                        <span class="laptop-brand">${l.brand}</span>
+                    </div>
+                    <div class="laptop-body">
+                        <h3 class="laptop-title">${l.model}</h3>
+                        <div class="laptop-loc">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            ${l.pickup_location}
+                        </div>
+                        <div class="laptop-chips">
+                            <span class="chip">${l.specs}</span>
+                        </div>
+                        <div class="laptop-footer">
+                            <div>
+                                <div class="price">${formatCurrency(l.price_per_day)}</div>
+                                <span style="font-size:0.75rem; color:var(--text-muted);">per day</span>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="openLaptopDetail(${l.laptop_id})">
+                                View & Rent
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function applyFilters() {
+            const q = document.getElementById('filter-search').value.toLowerCase().trim();
+            const brand = document.getElementById('filter-brand').value;
+            const maxPrice = parseFloat(document.getElementById('filter-price').value) || Infinity;
+
+            const filtered = laptops.filter(l => {
+                const matchQ = !q || l.model.toLowerCase().includes(q) || l.specs.toLowerCase().includes(q) || l.pickup_location.toLowerCase().includes(q);
+                const matchB = brand === 'all' || l.brand.toLowerCase() === brand.toLowerCase();
+                const matchP = l.price_per_day <= maxPrice;
+                return matchQ && matchB && matchP;
+            });
+            renderBrowseGrid(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-brand').value = 'all';
+            document.getElementById('filter-price').value = '';
+            renderBrowseGrid();
+        }
+
+        // ------------------------------------------------------------
+        // Laptop Detail & Live Date Calculator
+        // ------------------------------------------------------------
+        function openLaptopDetail(laptopId) {
+            const lap = laptops.find(l => l.laptop_id === laptopId);
+            if (!lap) return;
+
+            const container = document.getElementById('detail-card-content');
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+            const endDefault = new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0];
+
+            const isOwner = currentUser && (currentUser.user_id === lap.owner_id);
+
+            container.innerHTML = `
+                <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-md); margin-bottom:2rem;">
+                    <div style="height:320px; position:relative; background:#0f172a;">
+                        <img src="${lap.image_url}" style="width:100%; height:100%; object-fit:cover;">
+                        <span class="laptop-brand" style="top:18px; left:18px; font-size:0.85rem;">${lap.brand}</span>
+                    </div>
+                    <div style="padding:2rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                            <div>
+                                <h1 style="font-size:1.85rem; font-weight:800; margin-bottom:0.35rem;">${lap.model}</h1>
+                                <p style="color:var(--primary-light); font-weight:600; font-size:0.95rem;">
+                                    Pickup Point: ${lap.pickup_location}
+                                </p>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-size:2rem; font-weight:800; color:var(--primary);">${formatCurrency(lap.price_per_day)}</div>
+                                <span style="font-size:0.8rem; color:var(--text-muted);">per day</span>
+                            </div>
+                        </div>
+
+                        <div style="background:var(--bg-muted); padding:1rem; border-radius:var(--radius-md); margin-bottom:1.5rem;">
+                            <strong>Hardware Specs:</strong> ${lap.specs}
+                        </div>
+
+                        <p style="color:var(--text-muted); line-height:1.6; margin-bottom:2rem;">
+                            ${lap.description || 'Verified laptop maintained in clean condition. Charger included.'}
+                        </p>
+
+                        <div style="border-top:1px solid var(--border); padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+                            <div>
+                                <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Owner Student</span>
+                                <div style="font-weight:700;">${lap.owner_name} (${lap.owner_uid})</div>
+                            </div>
+                            <span class="badge badge-active">CU Verified</span>
+                        </div>
+
+                        <!-- Booking Form Card -->
+                        <div style="background:var(--bg-muted); border-radius:var(--radius-lg); padding:1.75rem;">
+                            <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:1rem;">Select Rental Dates</h3>
+                            ${isOwner ? `
+                                <div style="background:#eff6ff; padding:1rem; border-radius:var(--radius-md); color:#1e40af; text-align:center;">
+                                    <strong>You own this laptop.</strong> You cannot rent your own device.
+                                </div>
+                            ` : `
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+                                    <div>
+                                        <label class="form-label">Start Date</label>
+                                        <input type="date" id="book-start" class="form-control" value="${tomorrow}" min="${today}" onchange="recalculateCost(${lap.price_per_day})">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">End Date</label>
+                                        <input type="date" id="book-end" class="form-control" value="${endDefault}" min="${tomorrow}" onchange="recalculateCost(${lap.price_per_day})">
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:1rem; background:#fff; border-radius:var(--radius-md); border:1px solid var(--border); margin-bottom:1.5rem;">
+                                    <div>
+                                        <span id="cost-days">3</span> Days Rental:
+                                    </div>
+                                    <strong id="cost-total" style="font-size:1.35rem; color:var(--primary);">${formatCurrency(lap.price_per_day * 3)}</strong>
+                                </div>
+
+                                <button class="btn btn-accent btn-block btn-lg" onclick="submitBookingRequest(${lap.laptop_id})">
+                                    Send Rental Request to Owner
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+            switchView('detail');
+        }
+
+        function recalculateCost(dailyPrice) {
+            const startVal = document.getElementById('book-start').value;
+            const endVal = document.getElementById('book-end').value;
+            if (!startVal || !endVal) return;
+
+            const start = new Date(startVal);
+            const end = new Date(endVal);
+            const diffDays = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+            if (diffDays <= 0) {
+                document.getElementById('cost-days').textContent = '0';
+                document.getElementById('cost-total').textContent = 'Invalid dates';
+                return;
+            }
+
+            document.getElementById('cost-days').textContent = diffDays;
+            document.getElementById('cost-total').textContent = formatCurrency(diffDays * dailyPrice);
+        }
+
+        function submitBookingRequest(laptopId) {
+            if (!currentUser) {
+                openAuthModal('login');
+                return;
+            }
+
+            const lap = laptops.find(l => l.laptop_id === laptopId);
+            const start = document.getElementById('book-start').value;
+            const end = document.getElementById('book-end').value;
+
+            const diffDays = Math.round((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24)) + 1;
+            if (diffDays <= 0) {
+                showToast('End date must be greater than or equal to start date.', 'error');
+                return;
+            }
+
+            // Check collision with approved bookings
+            const collision = bookings.find(b =>
+                b.laptop_id === laptopId &&
+                (b.status === 'APPROVED' || b.status === 'ACTIVE') &&
+                !(new Date(start) > new Date(b.end_date) || new Date(end) < new Date(b.start_date))
+            );
+
+            if (collision) {
+                showToast('This laptop already has a confirmed booking for those dates.', 'error');
+                return;
+            }
+
+            const newBooking = {
+                booking_id: bookings.length + 1,
+                laptop_id: laptopId,
+                laptop_model: lap.model,
+                brand: lap.brand,
+                renter_id: currentUser.user_id,
+                renter_name: currentUser.name,
+                renter_uid: currentUser.uid,
+                owner_id: lap.owner_id,
+                owner_name: lap.owner_name,
+                owner_uid: lap.owner_uid,
+                pickup_location: lap.pickup_location,
+                start_date: start,
+                end_date: end,
+                total_days: diffDays,
+                total_price: diffDays * lap.price_per_day,
+                status: 'PENDING',
+                payment_status: 'PENDING',
+                transaction_id: null
+            };
+
+            bookings.unshift(newBooking);
+            setStorage('bookings', bookings);
+
+            showToast('Rental request sent to owner!', 'success');
+            renderNavbarAuth();
+            switchView('rentals');
+        }
+
+        // ------------------------------------------------------------
+        // Dashboard, Rentals, Listings, Requests Renderers
+        // ------------------------------------------------------------
+        function renderDashboard() {
+            if (!currentUser) return;
+            const myRentals = bookings.filter(b => b.renter_id === currentUser.user_id);
+            const myRequests = bookings.filter(b => b.owner_id === currentUser.user_id);
+            const myListings = laptops.filter(l => l.owner_id === currentUser.user_id);
+
+            const activeRentals = myRentals.filter(b => b.status === 'ACTIVE' || b.status === 'APPROVED').length;
+            const pendingRequests = myRequests.filter(b => b.status === 'PENDING').length;
+            const earned = myRequests.filter(b => b.payment_status === 'PAID').reduce((sum, b) => sum + b.total_price, 0);
+
+            document.getElementById('dash-active-count').textContent = activeRentals;
+            document.getElementById('dash-pending-count').textContent = pendingRequests;
+            document.getElementById('dash-earned-amount').textContent = formatCurrency(earned);
+            document.getElementById('dash-listings-count').textContent = myListings.length;
+
+            // Render tables
+            const rTable = document.getElementById('dash-rentals-table');
+            if (myRentals.length === 0) {
+                rTable.innerHTML = `<p style="padding:2rem; text-align:center; color:var(--text-muted);">No rentals placed yet.</p>`;
+            } else {
+                rTable.innerHTML = `
+                    <table class="custom-table">
+                        <thead><tr><th>Laptop</th><th>Total</th><th>Status</th></tr></thead>
+                        <tbody>
+                            ${myRentals.slice(0, 3).map(b => `
+                                <tr>
+                                    <td><strong>${b.laptop_model}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${b.start_date}</span></td>
+                                    <td>${formatCurrency(b.total_price)}</td>
+                                    <td>${getStatusBadge(b.status)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            const reqTable = document.getElementById('dash-requests-table');
+            if (myRequests.length === 0) {
+                reqTable.innerHTML = `<p style="padding:2rem; text-align:center; color:var(--text-muted);">No incoming requests.</p>`;
+            } else {
+                reqTable.innerHTML = `
+                    <table class="custom-table">
+                        <thead><tr><th>Laptop</th><th>Renter</th><th>Action</th></tr></thead>
+                        <tbody>
+                            ${myRequests.slice(0, 3).map(b => `
+                                <tr>
+                                    <td><strong>${b.laptop_model}</strong></td>
+                                    <td>${b.renter_name} (${b.renter_uid})</td>
+                                    <td>
+                                        ${b.status === 'PENDING' ? `
+                                            <button class="btn btn-success btn-sm" onclick="ownerAction(${b.booking_id}, 'APPROVED')">Approve</button>
+                                        ` : getStatusBadge(b.status)}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+        }
+
+        function renderRentals() {
+            if (!currentUser) return;
+            const container = document.getElementById('rentals-table-container');
+            const myRentals = bookings.filter(b => b.renter_id === currentUser.user_id);
+
+            if (myRentals.length === 0) {
+                container.innerHTML = `<p style="padding:3rem; text-align:center; color:var(--text-muted);">You have no rental bookings yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Laptop / Owner</th>
+                            <th>Rental Dates</th>
+                            <th>Total Cost</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${myRentals.map(b => `
+                            <tr>
+                                <td>
+                                    <strong>${b.laptop_model}</strong>
+                                    <div style="font-size:0.75rem; color:var(--text-muted);">Owner: ${b.owner_name} (${b.owner_uid})</div>
+                                </td>
+                                <td>
+                                    ${b.start_date} &rarr; ${b.end_date}
+                                    <div style="font-size:0.75rem; color:var(--text-muted);">${b.total_days} days</div>
+                                </td>
+                                <td><strong>${formatCurrency(b.total_price)}</strong></td>
+                                <td>${getStatusBadge(b.status)}</td>
+                                <td>
+                                    ${b.payment_status === 'PAID' ? '<span class="badge badge-paid">PAID (DEMO)</span>' : '<span class="badge badge-pending">UNPAID</span>'}
+                                </td>
+                                <td style="text-align:right;">
+                                    ${b.status === 'APPROVED' && b.payment_status !== 'PAID' ? `
+                                        <button class="btn btn-accent btn-sm" onclick="openDemoPayment(${b.booking_id})">Pay Demo</button>
+                                    ` : ''}
+                                    ${b.status === 'ACTIVE' || b.status === 'APPROVED' ? `
+                                        <button class="btn btn-outline btn-sm" onclick="returnRental(${b.booking_id})">Return</button>
+                                    ` : ''}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function renderListings() {
+            if (!currentUser) return;
+            const container = document.getElementById('my-listings-table');
+            const myListings = laptops.filter(l => l.owner_id === currentUser.user_id);
+
+            if (myListings.length === 0) {
+                container.innerHTML = `<p style="padding:3rem; text-align:center; color:var(--text-muted);">You haven't listed any laptops yet. Click "+ Add New Laptop" to get started.</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Specs</th>
+                            <th>Daily Rate</th>
+                            <th>Pickup Spot</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${myListings.map(l => `
+                            <tr>
+                                <td><strong>${l.model}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${l.brand}</span></td>
+                                <td style="font-size:0.85rem;">${l.specs}</td>
+                                <td><strong style="color:var(--primary);">${formatCurrency(l.price_per_day)}</strong></td>
+                                <td style="font-size:0.85rem; color:var(--text-muted);">${l.pickup_location}</td>
+                                <td style="text-align:right;">
+                                    <button class="btn btn-outline btn-sm" onclick="openEditLaptopModal(${l.laptop_id})">Edit</button>
+                                    <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:#fecaca;" onclick="deleteLaptop(${l.laptop_id})">Delete</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function renderRequests() {
+            if (!currentUser) return;
+            const container = document.getElementById('owner-requests-table');
+            const myRequests = bookings.filter(b => b.owner_id === currentUser.user_id);
+
+            if (myRequests.length === 0) {
+                container.innerHTML = `<p style="padding:3rem; text-align:center; color:var(--text-muted);">No incoming rental requests from other students.</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Your Laptop</th>
+                            <th>Student Requester</th>
+                            <th>Dates</th>
+                            <th>Earnings</th>
+                            <th>Status</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${myRequests.map(b => `
+                            <tr>
+                                <td><strong>${b.laptop_model}</strong></td>
+                                <td>
+                                    <strong>${b.renter_name}</strong>
+                                    <div style="font-size:0.75rem; color:var(--text-muted);">${b.renter_uid}</div>
+                                </td>
+                                <td>${b.start_date} &rarr; ${b.end_date} (${b.total_days} d)</td>
+                                <td><strong style="color:var(--success);">${formatCurrency(b.total_price)}</strong></td>
+                                <td>${getStatusBadge(b.status)}</td>
+                                <td style="text-align:right;">
+                                    ${b.status === 'PENDING' ? `
+                                        <button class="btn btn-success btn-sm" onclick="ownerAction(${b.booking_id}, 'APPROVED')">Approve</button>
+                                        <button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="ownerAction(${b.booking_id}, 'REJECTED')">Reject</button>
+                                    ` : (b.status === 'ACTIVE' ? `
+                                        <button class="btn btn-outline btn-sm" onclick="ownerAction(${b.booking_id}, 'RETURNED')">Mark Returned</button>
+                                    ` : '<span style="font-size:0.8rem; color:var(--text-light);">Completed</span>')}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function ownerAction(bookingId, newStatus) {
+            const b = bookings.find(item => item.booking_id === bookingId);
+            if (b) {
+                b.status = newStatus;
+                setStorage('bookings', bookings);
+                showToast(`Booking request marked as ${newStatus}!`, 'info');
+                renderDashboard();
+                renderRequests();
+                renderNavbarAuth();
+            }
+        }
+
+        function returnRental(bookingId) {
+            const b = bookings.find(item => item.booking_id === bookingId);
+            if (b) {
+                b.status = 'RETURNED';
+                setStorage('bookings', bookings);
+                showToast('Laptop marked as returned. Rental completed!', 'success');
+                renderRentals();
+            }
+        }
+
+        // ------------------------------------------------------------
+        // Demo Payment Simulator
+        // ------------------------------------------------------------
+        function openDemoPayment(bookingId) {
+            const b = bookings.find(item => item.booking_id === bookingId);
+            if (!b) return;
+
+            const box = document.getElementById('payment-box');
+            box.innerHTML = `
+                <h2 style="font-size:1.4rem; font-weight:800; margin-bottom:1rem;">Simulated Demo Checkout</h2>
+                <div style="background:var(--bg-muted); padding:1rem; border-radius:var(--radius-md); margin-bottom:1.5rem; font-size:0.9rem;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                        <span>Laptop:</span> <strong>${b.laptop_model}</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                        <span>Owner:</span> <span>${b.owner_name} (${b.owner_uid})</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                        <span>Duration:</span> <span>${b.start_date} to ${b.end_date} (${b.total_days} Days)</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding-top:0.75rem; border-top:1px solid var(--border); font-weight:700;">
+                        <span>Total Payable:</span> <strong style="font-size:1.25rem; color:var(--primary);">${formatCurrency(b.total_price)}</strong>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Payment Mode</label>
+                    <select class="form-control">
+                        <option>Demo UPI (Google Pay / Paytm / PhonePe)</option>
+                        <option>Campus Student NetBanking</option>
+                        <option>College Debit Card</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-accent btn-block btn-lg" onclick="executeDemoPayment(${b.booking_id})">
+                    Confirm Demo Payment (${formatCurrency(b.total_price)})
+                </button>
+            `;
+            switchView('payment');
+        }
+
+        function executeDemoPayment(bookingId) {
+            const b = bookings.find(item => item.booking_id === bookingId);
+            if (b) {
+                b.payment_status = 'PAID';
+                b.status = 'ACTIVE';
+                b.transaction_id = 'TXN_CU_' + Date.now().toString().slice(-6);
+                setStorage('bookings', bookings);
+                showToast('Demo Payment Confirmed! Rental is now ACTIVE.', 'success');
+                switchView('rentals');
+            }
+        }
+
+        // ------------------------------------------------------------
+        // Laptop Add / Edit Form
+        // ------------------------------------------------------------
+        function openAddLaptopModal() {
+            if (!currentUser) {
+                openAuthModal('login');
+                return;
+            }
+            document.getElementById('form-laptop').reset();
+            document.getElementById('edit-laptop-id').value = '';
+            document.getElementById('modal-laptop-title').textContent = 'List a Laptop for Campus Rent';
+            openModal('modal-laptop');
+        }
+
+        function openEditLaptopModal(laptopId) {
+            const l = laptops.find(item => item.laptop_id === laptopId);
+            if (!l) return;
+            document.getElementById('edit-laptop-id').value = l.laptop_id;
+            document.getElementById('lap-brand').value = l.brand;
+            document.getElementById('lap-model').value = l.model;
+            document.getElementById('lap-specs').value = l.specs;
+            document.getElementById('lap-price').value = l.price_per_day;
+            document.getElementById('lap-location').value = l.pickup_location;
+            document.getElementById('lap-image').value = l.image_url || '';
+            document.getElementById('lap-desc').value = l.description || '';
+            document.getElementById('modal-laptop-title').textContent = 'Edit Laptop Listing';
+            openModal('modal-laptop');
+        }
+
+        function handleSaveLaptop(e) {
+            e.preventDefault();
+            const editId = document.getElementById('edit-laptop-id').value;
+            const brand = document.getElementById('lap-brand').value;
+            const model = document.getElementById('lap-model').value.trim();
+            const specs = document.getElementById('lap-specs').value.trim();
+            const price = parseFloat(document.getElementById('lap-price').value);
+            const location = document.getElementById('lap-location').value.trim();
+            const image = document.getElementById('lap-image').value.trim() || 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80';
+            const desc = document.getElementById('lap-desc').value.trim();
+
+            if (editId) {
+                const l = laptops.find(item => item.laptop_id === parseInt(editId));
+                if (l) {
+                    l.brand = brand; l.model = model; l.specs = specs; l.price_per_day = price;
+                    l.pickup_location = location; l.image_url = image; l.description = desc;
+                    showToast('Listing updated!', 'success');
+                }
+            } else {
+                const newLap = {
+                    laptop_id: laptops.length + 1,
+                    owner_id: currentUser.user_id,
+                    owner_name: currentUser.name,
+                    owner_uid: currentUser.uid,
+                    brand, model, specs, price_per_day: price,
+                    pickup_location: location, image_url: image, description: desc,
+                    is_active: true
+                };
+                laptops.unshift(newLap);
+                showToast('Laptop listed for campus rent!', 'success');
+            }
+
+            setStorage('laptops', laptops);
+            closeModal('modal-laptop');
+            renderListings();
+            renderFeatured();
+        }
+
+        function deleteLaptop(id) {
+            if (!confirm('Are you sure you want to delete this listing?')) return;
+            laptops = laptops.filter(l => l.laptop_id !== id);
+            setStorage('laptops', laptops);
+            showToast('Listing deleted.', 'info');
+            renderListings();
+            renderFeatured();
+        }
+
+        // ------------------------------------------------------------
+        // Authentication & Demo Helpers
+        // ------------------------------------------------------------
+        let authMode = 'login';
+        function openAuthModal(mode = 'login') {
+            authMode = mode;
+            const title = document.getElementById('auth-title');
+            const regFields = document.getElementById('reg-fields');
+            const btn = document.getElementById('auth-btn');
+            const toggle = document.getElementById('toggle-auth-link');
+
+            if (authMode === 'register') {
+                title.textContent = 'Create Student Account';
+                regFields.style.display = 'block';
+                btn.textContent = 'Sign Up';
+                toggle.textContent = 'Already have an account? Sign in here';
+            } else {
+                title.textContent = 'Student Sign In';
+                regFields.style.display = 'none';
+                btn.textContent = 'Sign In';
+                toggle.textContent = 'Need an account? Register here';
+            }
+            openModal('modal-auth');
+        }
+
+        function toggleAuthMode() {
+            openAuthModal(authMode === 'login' ? 'register' : 'login');
+        }
+
+        function fillDemo(uid) {
+            document.getElementById('auth-id').value = uid;
+            document.getElementById('auth-pass').value = 'Password@123';
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('auth-id').value.trim();
+
+            if (authMode === 'register') {
+                const name = document.getElementById('auth-name').value.trim();
+                const uid = document.getElementById('auth-uid').value.trim().toUpperCase();
+                const newUser = {
+                    user_id: Date.now(),
+                    name, uid, email: id.includes('@') ? id : `${uid.toLowerCase()}@cuchd.in`,
+                    department: 'Computer Science', phone: '+91 98765 00000'
+                };
+                currentUser = newUser;
+                setStorage('currentUser', currentUser);
+                showToast(`Welcome to CU LaptopLoop, ${name}!`, 'success');
+            } else {
+                // Find demo account
+                const found = DEFAULT_USERS.find(u => u.uid.toUpperCase() === id.toUpperCase() || u.email.toLowerCase() === id.toLowerCase());
+                if (found) {
+                    currentUser = found;
+                } else {
+                    currentUser = { user_id: 99, name: id, uid: id, email: `${id}@cuchd.in` };
+                }
+                setStorage('currentUser', currentUser);
+                showToast(`Signed in as ${currentUser.name}!`, 'success');
+            }
+
+            closeModal('modal-auth');
+            renderNavbarAuth();
+            switchView('dashboard');
+        }
+
+        function logoutUser() {
+            currentUser = null;
+            localStorage.removeItem('cu_currentUser');
+            showToast('Logged out.', 'info');
+            renderNavbarAuth();
+            switchView('landing');
+        }
+
+        function renderProfile() {
+            if (!currentUser) return;
+            document.getElementById('prof-name').textContent = currentUser.name;
+            document.getElementById('prof-uid').textContent = currentUser.uid;
+            document.getElementById('prof-email').textContent = currentUser.email;
+            document.getElementById('prof-dept').textContent = currentUser.department || 'Chandigarh University';
+            document.getElementById('prof-phone').textContent = currentUser.phone || '+91 98765 43210';
+            document.getElementById('prof-avatar').textContent = currentUser.name.split(' ').map(n=>n[0]).join('').substring(0,2);
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNavbarAuth();
+            renderFeatured();
+        });
+    </script>
+</body>
+</html>
